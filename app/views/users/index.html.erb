@@ -6,6 +6,17 @@
      <h2 class='mt-3'>New book</h2>
      <%= render 'books/form', book: @book %>
     </div>
+    
+     <p>検索</p>
+    <%= form_tag(search_path,:method => 'get') do %>
+      <%= text_field_tag :search %>
+      <%= select_tag "model", options_for_select([["user", "user"],["book","book"]]) %>
+      <%= select_tag "method", options_for_select([["完全一致", "完全一致"],["前方一致","前方一致"],["後方一致", "後方一致"],["部分一致", "部分一致"]]) %>
+      <%= submit_tag 'Search', :name => nil %>
+    <% end %>
+     
+  
+
     <div class= 'col-md-8 offset-md-1'>
      <h2>Users</h2>
      <%= render 'index',users: @users %>

@@ -7,17 +7,19 @@ class Book < ApplicationRecord
   def book_favorited_by?(user)
     # selfはこのmethodをよびだしたもの
     self.favorites.where(user_id: user.id).exists?
-    # 呼び出し元にひもづくfavorites
-    # のなかでuser_idがcurrent_user.idのもの
-    # が存在するかどうか?
-    
-    # user.books
-    # 1 N
-    
-    # book favorites
-    # 1 N
   end
 
+  def self.search_for(content, method)
+    if method == 'perfect'
+      Book.where(title: content)
+    elsif method == 'forward'
+      Book.where('title LIKE ?', '#{content%}')
+    elsif method == 'backward'
+      Book.where('title LIKE ?', '%{content}')
+    else
+      Book.where('title LIKE ?', '%#{content}%' )
+    end
+  end
 	validates :title, presence: true
 	validates :body, presence: true, length: {maximum: 200}
 end
