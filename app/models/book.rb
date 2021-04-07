@@ -4,7 +4,7 @@ class Book < ApplicationRecord
   has_many :book_comments, dependent: :destroy
   # インスタンスメソッド
   # よびだしたのはなに? => @book
-  def book_favorited_by?(user)
+  def favorited_by?(user)
     # selfはこのmethodをよびだしたもの
     self.favorites.where(user_id: user.id).exists?
   end

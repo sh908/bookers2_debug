@@ -7,6 +7,8 @@ class BooksController < ApplicationController
     # @book_new = Book.new
     @book_comment = BookComment.new
     @book_comment.user_id = current_user
+    #新着順で表示
+    @book_comments = @book.book_comments.order(created_at: :desc)
   end
 
   def index

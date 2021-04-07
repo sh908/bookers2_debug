@@ -18,49 +18,45 @@
            </td>
            <td><%= link_to @book.title, book_path(@book) %></td>
            <td><%= @book.body %></td>
-          <% if @book.book_favorited_by?(current_user) %>
-             <td>
-               <%= link_to book_favorites_path(@book), method: :delete do %>
+          <% if @book.favorited_by?(current_user) %>
+             <td class="favorite-btn">
+               <%= link_to book_favorites_path(@book), method: :delete, remote: true do %>
                  ♥<%= @book.favorites.count %> いいね
                <% end %>
              </td>
            <% else %>
-             <td>
-               <%= link_to book_favorites_path(@book), method: :post do %>
+             <td class="favorite-btn">
+
+               <%= link_to book_favorites_path(@book), method: :post, remote: true do %>
                  ♡<%= @book.favorites.count %> いいね
-               <% end %>
+               <% end %>               
              </td>
             <% end %>
            </table>
 
            <table class="comments">
-            <td>コメント件数：<%= @book.book_comments.count %></td>
-            <% @book.book_comments.each do |book_comment| %>
-             <td><%= attachment_image_tag book_comment.user, :profile_image, :fill, 50, 50, fallback: 'no-image-icon.jpg', size: "50x50" %></td>
-             <%= book_comment.user.name %>
-             <!--%= book_comment.created_at.strftime('%Y/%m/%d') %>-->
-             <%= book_comment.comment %>
-             <% if book_comment.user == current_user %>
-
-              <td><%= link_to "削除", book_book_comment_path(book_comment.book, book_comment), method: :delete %></td>
-
-             <% end %>
-            <% end %>
-
-
           <% if @book.user == current_user %>
            <td><%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success edit_book_#{@book.id}" %></td>
            <td><%= link_to 'Destroy', book_path(@book), method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger destroy_book_#{@book.id}"%></td>
           <% end %>
         </tr>
       </table>
+      <td class="favorite-btn">
+       <%= render 'favorites/favorite-btn', book: @book %>
+      </td>
+      <h4>コメント</h4>
+    <div id="book_comments_area"><!-- #① -->
+      <!-- 投稿されたコメント一覧をブログの詳細ページに表示するためのrender -->
+      <%= render partial: 'book_comments/index', locals: { book_comments: @book_comments } %>
+    </div>
+
     </div>
   </div>
-  
- 　<%= form_with(model:[@book, @book_comment], local: true) do |f| %>
+
+ 　<%= form_with(model:[@book, @book_comment], remote: true) do |f| %>
     <%= f.text_area :comment, rows:'5',placeholder: "コメントをここに" %>
      <%= f.submit "送信する" %>
       <% end %>
-   
+
   </div>
 </div>
